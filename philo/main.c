@@ -20,35 +20,39 @@ time_t	get_time_in_ms(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-//mainnnnn
-// 	if (argc < 5 || argc > 6)
-// 		return (error_handler("usage: ./philo <number_of_philosophers> \
-// <time_to_die> <time_to_eat> <time_to_sleep> \
-// [number_of_times_each_philosopher_must_eat]", 1));
-// 	if (check_wrong_input(argc, argv))
-// 		return (1);
-	// data = init_data(argc, argv, 1);
-
 void	clean_and_quit(t_data *data, t_philo *philos)
 {
+	int	i;
+
+	i = 0;
+	if (data->forks_mutex != NULL)
+	{
+		while (i < data->num_philos)
+		{
+			pthread_mutex_destroy(&data->forks_mutex[i]);
+			i++;
+		}
+		free(data->forks_mutex);
+		data->forks_mutex = NULL;
+	}
 	free(data);
 	free(philos);
 	pthread_mutex_destroy(&data->printf_mutex);
 }
-	
+
 void	*routine(void *arg)
 {
 	t_philo	*philo;
 	time_t	time;
 
 	if (!arg)
-		return NULL;
-	philo = (t_philo*)arg;
+		return (NULL);
+	philo = (t_philo *)arg;
 	time = (get_time_in_ms()) - philo->data->start_time;
 	pthread_mutex_lock(&philo->data->printf_mutex);
 	printf("%ld Philosopher %u is eating\n", time, philo->id);
 	pthread_mutex_unlock(&philo->data->printf_mutex);
-	usleep(100* 1000);
+	usleep(100 * 1000);
 	time = (get_time_in_ms()) - philo->data->start_time;
 	pthread_mutex_lock(&philo->data->printf_mutex);
 	printf("%ld Philosopher %u is sleeping\n", time, philo->id);
@@ -58,7 +62,7 @@ void	*routine(void *arg)
 	pthread_mutex_lock(&philo->data->printf_mutex);
 	printf("%ld Philosopher %u is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->data->printf_mutex);
-	return NULL;
+	return (NULL);
 }
 
 static int	run_threads(t_data *data, t_philo *philos)
@@ -88,20 +92,17 @@ int	main(int argc, char **argv)
 {
 	t_philo	*philos;
 	t_data	*data;
-	int		*forks;
 	int		exitcode;
 
-	if (argc != 2)
-		return(error_handler("Wrong num of arg", 1));
+	if (argc < 2 || argc > 2)
+		return (error_handler(USAGE, 1));
+	if (check_wrong_input(argc, argv))
+		return (1);
 	exitcode = 0;
 	data = init_data(argc, argv);
 	if (!data)
 		return (error_handler("faild to init data", 1));
-	//forks = malloc(sizeof(int) * data->num_philos);
-	forks = NULL;
-	//if (!forks)
-		//return (error_handler("faild to create forks", 1));
-	philos = init_philos(data, forks);
+	philos = init_philos(data);
 	if (!philos)
 		return (error_handler("faild to init philos", 1));
 	exitcode = run_threads(data, philos);
