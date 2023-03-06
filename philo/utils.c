@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/27 16:57:02 by guribeir          #+#    #+#             */
-/*   Updated: 2023/02/27 17:06:46 by guribeir         ###   ########.fr       */
+/*   Created: 2023/03/03 16:31:05 by guribeir          #+#    #+#             */
+/*   Updated: 2023/03/05 15:38:27 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int main(void)
+int	error_handler(char *str, int exit_code)
 {
-	write(1, "dale\n", 5);
-	return (0);
+	printf("philo: %s\n", str);
+	return (exit_code);
 }

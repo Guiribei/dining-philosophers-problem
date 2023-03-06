@@ -1,8 +1,8 @@
 NAME = philo
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -pthread #-fsanitize=thread -g
 PATH_OBJ = ./objects/
 
-SRC = main.c
+SRC = main.c utils.c validation.c init.c
 
 OBJ = ${SRC:%.c=$(PATH_OBJ)%.o}
 
