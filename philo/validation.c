@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: guribeir <guribeir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 17:46:00 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/05 15:38:42 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/07 14:20:23 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	check_wrong_input(int argc, char **argv)
 		if (!is_only_digit(argv[i]))
 			return (error_handler("Wrong entry", 1));
 		nb = philo_atoi(argv[i]);
-		if (i == 1 && nb <= 0)
+		if (i == 1 && (nb <= 0 || nb > 250))
 			return (error_handler("Incorrect number os philos", 1));
 		if (i != 1 && nb == -1)
 			return (error_handler("Invalid entry", 1));

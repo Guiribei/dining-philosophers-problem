@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
+/*   By: guribeir <guribeir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 19:14:02 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/07 03:13:17 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/07 18:24:12 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,37 +35,22 @@ void	clean_and_quit(t_data *data, t_philo *philos)
 		free(data->forks_mutex);
 		data->forks_mutex = NULL;
 	}
+	pthread_mutex_destroy(&data->printf_mutex);
+	pthread_mutex_destroy(&data->end_mutex);
 	free(data);
 	free(philos);
-	pthread_mutex_destroy(&data->printf_mutex);
 }
 
 void	*routine(void *arg)
 {
 	t_philo	*philo;
-	time_t	time;
 
 	if (!arg)
 		return (NULL);
 	philo = (t_philo *)arg;
-	time = (get_time_in_ms()) - philo->data->start_time;
-	pthread_mutex_lock(philo->right_fork);
-	pthread_mutex_lock(philo->left_fork);
-	pthread_mutex_lock(&philo->data->printf_mutex);
-	printf("%ld Philosopher %u is eating\n", time, philo->id);
-	pthread_mutex_unlock(&philo->data->printf_mutex);
-	pthread_mutex_unlock(philo->right_fork);
-	pthread_mutex_unlock(philo->left_fork);
-	usleep(100 * 1000);
-	time = (get_time_in_ms()) - philo->data->start_time;
-	pthread_mutex_lock(&philo->data->printf_mutex);
-	printf("%ld Philosopher %u is sleeping\n", time, philo->id);
-	pthread_mutex_unlock(&philo->data->printf_mutex);
-	usleep(100 * 1000);
-	time = (get_time_in_ms()) - philo->data->start_time;
-	pthread_mutex_lock(&philo->data->printf_mutex);
-	printf("%ld Philosopher %u is thinking\n", time, philo->id);
-	pthread_mutex_unlock(&philo->data->printf_mutex);
+	philo_eat(philo);
+	philo_sleep(philo);
+	philo_think(philo);
 	return (NULL);
 }
 
@@ -89,6 +74,7 @@ static int	run_threads(t_data *data, t_philo *philos)
 			return (error_handler("join thread", 1));
 		i++;
 	}
+	free(threads);
 	return (0);
 }
 
@@ -98,15 +84,15 @@ int	main(int argc, char **argv)
 	t_data	*data;
 	int		exitcode;
 
-	if (argc < 2 || argc > 2)
+	if (argc < 5 || argc > 6)
 		return (error_handler(USAGE, 1));
 	if (check_wrong_input(argc, argv))
 		return (1);
 	exitcode = 0;
-	data = init_data(argc, argv);
+	data = init_data(argv);
 	if (!data)
 		return (error_handler("faild to init data", 1));
-	philos = init_philos(data);
+	philos = init_philos(data, argv);
 	if (!philos)
 		return (error_handler("faild to init philos", 1));
 	exitcode = run_threads(data, philos);
