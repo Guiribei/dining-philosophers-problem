@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 19:14:02 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/05 22:16:58 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/07 03:13:17 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,13 @@ void	*routine(void *arg)
 		return (NULL);
 	philo = (t_philo *)arg;
 	time = (get_time_in_ms()) - philo->data->start_time;
+	pthread_mutex_lock(philo->right_fork);
+	pthread_mutex_lock(philo->left_fork);
 	pthread_mutex_lock(&philo->data->printf_mutex);
 	printf("%ld Philosopher %u is eating\n", time, philo->id);
 	pthread_mutex_unlock(&philo->data->printf_mutex);
+	pthread_mutex_unlock(philo->right_fork);
+	pthread_mutex_unlock(philo->left_fork);
 	usleep(100 * 1000);
 	time = (get_time_in_ms()) - philo->data->start_time;
 	pthread_mutex_lock(&philo->data->printf_mutex);

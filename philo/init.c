@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:40:23 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/05 22:58:02 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/07 03:12:40 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,16 @@ t_philo	*init_philos(t_data *data)
 	{
 		philos[i].id = i + 1;
 		philos[i].data = data;
+		if (philos[i].id % 2 == 1)
+		{
+			philos[i].right_fork = &data->forks_mutex[i];
+			philos[i].left_fork = &data->forks_mutex[(i + 1) % data->num_philos];
+		}
+		else
+		{
+			philos[i].left_fork = &data->forks_mutex[i];
+			philos[i].right_fork = &data->forks_mutex[(i + 1) % data->num_philos];
+		}
 		i++;
 	}
 	return (philos);
