@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guribeir <guribeir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 19:14:02 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/07 18:24:12 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/13 17:13:37 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,23 @@ void	clean_and_quit(t_data *data, t_philo *philos)
 void	*routine(void *arg)
 {
 	t_philo	*philo;
+	int		loop_breaker;
+	int		i;
 
+	i = 0;
 	if (!arg)
 		return (NULL);
 	philo = (t_philo *)arg;
-	philo_eat(philo);
-	philo_sleep(philo);
-	philo_think(philo);
+	pthread_mutex_lock(&philo->data->end_mutex);
+	loop_breaker = philo->data->is_over;
+	pthread_mutex_unlock(&philo->data->end_mutex);
+	while (i != philo->data->loops && !loop_breaker)
+	{
+		philo_eat(philo, 0);
+		philo_sleep(philo);
+		philo_think(philo);
+		i++;
+	}
 	return (NULL);
 }
 
@@ -89,10 +99,11 @@ int	main(int argc, char **argv)
 	if (check_wrong_input(argc, argv))
 		return (1);
 	exitcode = 0;
-	data = init_data(argv);
+	data = init_data(argc, argv);
 	if (!data)
 		return (error_handler("faild to init data", 1));
-	philos = init_philos(data, argv);
+	init_extra_mutexes(data);
+	philos = init_philos(data, argv, 0);
 	if (!philos)
 		return (error_handler("faild to init philos", 1));
 	exitcode = run_threads(data, philos);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guribeir <guribeir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:40:23 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/07 19:43:27 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/13 17:11:16 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,17 @@ pthread_mutex_t	*init_forks(t_data *data)
 	return (forks);
 }
 
-t_data	*init_data(char **argv)
+t_data	*init_data(int argc, char **argv)
 {
 	t_data	*data;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
 		return (NULL);
+	if (argc == 6)
+		data->loops = philo_atoi(argv[5]);
+	else
+		data->loops = -1;
 	data->is_over = 0;
 	data->start_time = get_time_in_ms();
 	data->num_philos = philo_atoi(argv[1]);
@@ -56,17 +60,13 @@ t_data	*init_data(char **argv)
 	return (data);
 }
 
-t_philo	*init_philos(t_data *data, char **argv)
+t_philo	*init_philos(t_data *data, char **argv, int i)
 {
 	t_philo	*philos;
-	int		i;
 
-	i = 0;
 	philos = malloc(sizeof(t_philo) * data->num_philos);
 	if (!philos)
 		return (NULL);
-	pthread_mutex_init(&data->printf_mutex, NULL);
-	pthread_mutex_init(&data->end_mutex, NULL);
 	while (i < data->num_philos)
 	{
 		philos[i].data = data;
@@ -76,15 +76,21 @@ t_philo	*init_philos(t_data *data, char **argv)
 		philos[i].time_sleep = philo_atoi(argv[4]);
 		if (philos[i].id % 2 == 1)
 		{
-			philos[i].right_fork = &data->forks_mutex[i];
-			philos[i].left_fork = &data->forks_mutex[(i + 1) % data->num_philos];
+			philos[i].r_fork = &data->forks_mutex[i];
+			philos[i].l_fork = &data->forks_mutex[(i + 1) % data->num_philos];
 		}
 		else
 		{
-			philos[i].left_fork = &data->forks_mutex[i];
-			philos[i].right_fork = &data->forks_mutex[(i + 1) % data->num_philos];
+			philos[i].l_fork = &data->forks_mutex[i];
+			philos[i].r_fork = &data->forks_mutex[(i + 1) % data->num_philos];
 		}
 		i++;
 	}
 	return (philos);
+}
+
+void	init_extra_mutexes(t_data *data)
+{
+	pthread_mutex_init(&data->printf_mutex, NULL);
+	pthread_mutex_init(&data->end_mutex, NULL);
 }
