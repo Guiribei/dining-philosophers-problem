@@ -2,7 +2,7 @@ NAME = philo
 FLAGS = -Wall -Wextra -Werror -pthread
 PATH_OBJ = ./objects/
 
-SRC = actions.c main.c utils.c validation.c init.c is_over.c get_forks.c
+SRC = actions.c main.c utils.c validation.c init.c is_over.c locks_forks_meals.c
 
 OBJ = ${SRC:%.c=$(PATH_OBJ)%.o}
 

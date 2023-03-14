@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 19:14:02 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/14 15:17:21 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/14 16:50:34 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,11 @@ static void	*supervisor_routine(void *arg)
 		i = 0;
 		while (i < philos->data->num_philos)
 		{
-			time = (get_time_in_ms()) - philos->data->start_time;
-			pthread_mutex_lock(&philos->data->meal_mutex);
-			meal = philos[i].last_meal;
-			pthread_mutex_unlock(&philos->data->meal_mutex);
+			get_last_meal(philos, &time, &meal, i);
 			if (time - meal >= philos[i].time_die)
 			{
 				change_is_over(philos);
-				pthread_mutex_lock(&philos->data->printf_mutex);
-				printf("%ld Philosopher %u died\n", time, philos->id);
-				pthread_mutex_unlock(&philos->data->printf_mutex);
+				get_printf(philos, time);
 				return (NULL);
 			}
 			if (check_meals(philos, i))
@@ -86,41 +81,34 @@ void	*routine(void *arg)
 		if (get_is_over(philo->data))
 			return (NULL);
 		philo_eat(philo, 0);
-		if (get_is_over(philo->data))
-			return (NULL);
 		philo_sleep(philo);
-		if (get_is_over(philo->data))
-			return (NULL);
 		philo_think(philo);
 		i++;
 	}
 	return (NULL);
 }
 
-static int	run_threads(t_data *data, t_philo *philos)
+static int	run_threads(t_data *data, t_philo *philos, int i, int j)
 {
 	pthread_t	*threads;
 	pthread_t	supervisor;
-	int			i;
 
 	threads = malloc(sizeof(pthread_t) * data->num_philos);
 	if (data->num_philos > 1)
 		if (pthread_create(&supervisor, NULL, supervisor_routine,
 				philos) != 0)
 			return (error_handler("create thread", 1));
-	i = 0;
 	while (i < data->num_philos)
 	{
 		if (pthread_create(&threads[i], NULL, routine, &philos[i]) != 0)
 			return (error_handler("create thread", 1));
 		i++;
 	}
-	i = 0;
-	while (i < data->num_philos)
+	while (j < data->num_philos)
 	{
-		if (pthread_join(threads[i], NULL) != 0)
+		if (pthread_join(threads[j], NULL) != 0)
 			return (error_handler("join thread", 1));
-		i++;
+		j++;
 	}
 	if (data->num_philos > 1)
 		if (pthread_join(supervisor, NULL) != 0)
@@ -147,7 +135,7 @@ int	main(int argc, char **argv)
 	philos = init_philos(data, argv, 0, argc);
 	if (!philos)
 		return (error_handler("faild to init philos", 1));
-	exitcode = run_threads(data, philos);
+	exitcode = run_threads(data, philos, 0, 0);
 	clean_and_quit(data, philos);
 	return (exitcode);
 }

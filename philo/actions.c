@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 16:00:06 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/14 14:46:34 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/14 16:46:55 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ void	philo_eat(t_philo *philo, time_t time)
 {
 	if (check_end(philo))
 		return ;
-	get_right_fork(philo, time);
 	time = (get_time_in_ms()) - philo->data->start_time;
+	get_right_fork(philo, time);
 	get_left_fork(philo, time);
 	set_last_meal(philo);
 	pthread_mutex_lock(&philo->data->printf_mutex);
@@ -56,6 +56,7 @@ void	philo_eat(t_philo *philo, time_t time)
 		pthread_mutex_unlock(philo->l_fork);
 		return ;
 	}
+	time = (get_time_in_ms()) - philo->data->start_time;
 	printf("%ld Philosopher %u is eating\n", time, philo->id);
 	pthread_mutex_unlock(&philo->data->printf_mutex);
 	new_sleep(philo, philo->time_eat);
@@ -71,6 +72,11 @@ void	philo_sleep(t_philo *philo)
 		return ;
 	time = (get_time_in_ms()) - philo->data->start_time;
 	pthread_mutex_lock(&philo->data->printf_mutex);
+	if (check_end(philo))
+	{
+		pthread_mutex_unlock(&philo->data->printf_mutex);
+		return ;
+	}
 	printf("%ld Philosopher %u is sleeping\n", time, philo->id);
 	pthread_mutex_unlock(&philo->data->printf_mutex);
 	new_sleep(philo, philo->time_sleep);
@@ -84,6 +90,11 @@ void	philo_think(t_philo *philo)
 		return ;
 	time = (get_time_in_ms()) - philo->data->start_time;
 	pthread_mutex_lock(&philo->data->printf_mutex);
+	if (check_end(philo))
+	{
+		pthread_mutex_unlock(&philo->data->printf_mutex);
+		return ;
+	}
 	printf("%ld Philosopher %u is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->data->printf_mutex);
 	new_sleep(philo, (philo->time_die - (get_time_in_ms()

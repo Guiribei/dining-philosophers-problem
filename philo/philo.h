@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 16:37:54 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/14 15:07:14 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/14 15:30:01 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,7 @@ void	init_extra_mutexes(t_data *data);
 void	clean_and_quit(t_data *data, t_philo *philos);
 void	get_right_fork(t_philo *philo, time_t time);
 void	get_left_fork(t_philo *philo, time_t time);
+void	get_printf(t_philo *philos, time_t time);
+void	get_last_meal(t_philo *philos, time_t *time, time_t *meal, int i);
 
 #endif
