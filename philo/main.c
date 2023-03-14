@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/01 19:14:02 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/14 16:50:34 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/15 00:16:55 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,18 +46,18 @@ static void	*supervisor_routine(void *arg)
 		while (i < philos->data->num_philos)
 		{
 			get_last_meal(philos, &time, &meal, i);
+			if (meals_done(philos))
+				return (NULL);
 			if (time - meal >= philos[i].time_die)
 			{
 				change_is_over(philos);
 				get_printf(philos, time);
 				return (NULL);
 			}
-			if (check_meals(philos, i))
-				return (NULL);
+			usleep(100);
 			i++;
 		}
 	}
-	return (NULL);
 }
 
 void	*routine(void *arg)

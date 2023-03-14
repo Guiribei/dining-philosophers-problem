@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/03 16:37:54 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/14 15:30:01 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/14 22:38:22 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ typedef struct s_philo
 	time_t			time_sleep;
 	time_t			last_meal;
 	unsigned int	id;
-	int				meals_to_take;
+	int				taken;
+	int				to_take;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
 	t_data			*data;
@@ -55,6 +56,7 @@ int		check_meals(t_philo *philo, int i);
 int		check_wrong_input(int argc, char **argv);
 int		error_handler(char *str, int exit_code);
 int		get_is_over(t_data *data);
+int		meals_done(t_philo *philo);
 int		philo_atoi(char *str);
 t_data	*init_data(char **argv);
 t_philo	*init_philos(t_data *data, char **argv, int i, int argc);

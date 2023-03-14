@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/07 16:00:06 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/14 16:46:55 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/15 00:17:25 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void	philo_sleep(t_philo *philo)
 	}
 	printf("%ld Philosopher %u is sleeping\n", time, philo->id);
 	pthread_mutex_unlock(&philo->data->printf_mutex);
+	if (check_end(philo))
+		return ;
 	new_sleep(philo, philo->time_sleep);
 }
 
@@ -88,15 +90,15 @@ void	philo_think(t_philo *philo)
 
 	if (check_end(philo))
 		return ;
-	time = (get_time_in_ms()) - philo->data->start_time;
 	pthread_mutex_lock(&philo->data->printf_mutex);
 	if (check_end(philo))
 	{
 		pthread_mutex_unlock(&philo->data->printf_mutex);
 		return ;
 	}
+	time = (get_time_in_ms()) - philo->data->start_time;
 	printf("%ld Philosopher %u is thinking\n", time, philo->id);
 	pthread_mutex_unlock(&philo->data->printf_mutex);
-	new_sleep(philo, (philo->time_die - (get_time_in_ms()
-				- philo->last_meal) - philo->time_eat) / 2);
+	new_sleep(philo, 1);
+	time = (get_time_in_ms()) - philo->data->start_time;
 }

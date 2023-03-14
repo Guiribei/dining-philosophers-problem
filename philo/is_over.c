@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/14 02:36:41 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/14 15:08:22 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/14 23:28:29 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,24 @@ int	check_end(t_philo *philo)
 int	check_meals(t_philo *philo, int i)
 {
 	pthread_mutex_lock(&philo->data->end_mutex);
-	if (i != philo->meals_to_take)
+	if (i != philo->to_take)
 	{
+		philo->taken++;
 		pthread_mutex_unlock(&philo->data->end_mutex);
 		return (0);
 	}
 	pthread_mutex_unlock(&philo->data->end_mutex);
 	return (1);
+}
+
+int	meals_done(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->data->end_mutex);
+	if (philo->taken == philo->to_take)
+	{
+		pthread_mutex_unlock(&philo->data->end_mutex);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->data->end_mutex);
+	return (0);
 }

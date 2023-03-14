@@ -6,7 +6,7 @@
 /*   By: guribeir <guribeir@student.42.rio>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/05 15:40:23 by guribeir          #+#    #+#             */
-/*   Updated: 2023/03/14 15:10:45 by guribeir         ###   ########.fr       */
+/*   Updated: 2023/03/14 22:09:21 by guribeir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ static void	init_philo_vars(t_data *data, char **argv, int i, t_philo *philos)
 {
 	philos[i].last_meal = 0;
 	philos[i].data = data;
+	philos[i].taken = 0;
 	philos[i].id = i + 1;
 	philos[i].time_die = philo_atoi(argv[2]);
 	philos[i].time_eat = philo_atoi(argv[3]);
@@ -76,9 +77,9 @@ t_philo	*init_philos(t_data *data, char **argv, int i, int argc)
 	while (i < data->num_philos)
 	{
 		if (argc == 6)
-			philos[i].meals_to_take = philo_atoi(argv[5]);
+			philos[i].to_take = philo_atoi(argv[5]);
 		else
-			philos[i].meals_to_take = -1;
+			philos[i].to_take = -1;
 		init_philo_vars(data, argv, i, philos);
 		if (philos[i].id % 2 == 1)
 		{
