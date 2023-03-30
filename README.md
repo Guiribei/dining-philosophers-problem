@@ -1,6 +1,6 @@
 # Philosophers
 
-This project is a simulation of the Dijkstra dining philosophers problem using threads and mutexes in C. The aim of the project is to familiarize you with the concept of threads, and how to handle synchronization issues in a multi-threaded environment.
+This project is a simulation of the Dijkstra dining philosophers problem using threads and mutexes in C. The aim of the project was to show the concept of threads, and how to handle synchronization issues in a multi-threaded environment.
 
 ## Description
 
