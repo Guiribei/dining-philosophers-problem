@@ -1,10 +1,17 @@
-# Philosophers
+<h1 align="center">
+	Philosophers
+</h1>
 
-This project is a simulation of the Dijkstra dining philosophers problem using threads and mutexes in C. The aim of the project was to show the concept of threads, and how to handle synchronization issues in a multi-threaded environment.
+<p align="center">
+    <img src="https://github.com/guiribei/guiribei/blob/main/42_badges/philosopherse.png" />
+</p>
+
+## Summary
+> <i>The dining philosophers problem is a classic synchronization problem where multiple philosophers sit around a table with a bowl of spaghetti in the center. Each philosopher has a fork between themselves and the adjacent philosopher. A philosopher can only eat when they have both the left and right forks. They can either think, sleep, or eat at any given time.</i>
 
 ## Description
 
-The dining philosophers problem is a classic synchronization problem where multiple philosophers sit around a table with a bowl of spaghetti in the center. Each philosopher has a fork between themselves and the adjacent philosopher. A philosopher can only eat when they have both the left and right forks. They can either think, sleep, or eat at any given time.
+
 
 The challenge is to ensure that all philosophers get a fair chance to eat without causing deadlocks or resource starvation.
 
