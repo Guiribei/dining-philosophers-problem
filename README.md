@@ -11,9 +11,7 @@
 
 ## Description
 
-
-
-The challenge is to ensure that all philosophers get a fair chance to eat without causing deadlocks or resource starvation.
+The challenge is to ensure that all philosophers get a fair chance to eat (all threads execute their routine) without causing deadlocks or resource starvation. For that, mutexes are used to protect against data racing. And it is necessary to handle them correctly to avoid deadlock.
 
 ## Compilation
 
